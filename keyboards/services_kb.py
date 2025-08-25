@@ -1,9 +1,19 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+# services_kb.py
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import WebAppInfo
-services_kb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="💬 Хочу консультацию", web_app=WebAppInfo(url="https://neonavt.github.io/anton_bot/request-callback.html"))],
-    [InlineKeyboardButton(text="🔧 Услуги", callback_data="services"),
-     InlineKeyboardButton(text="👨‍🔧 О нас", callback_data="about")],
-    [InlineKeyboardButton(text="🧾 Стоимость", callback_data="prices"),
-     InlineKeyboardButton(text="✅ Проекты", callback_data="projects")]
-])
+
+services_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="💬 Хочу консультацию", web_app=WebAppInfo(url="https://neonavt.github.io/anton_bot/request-callback.html"))],
+        [
+            KeyboardButton(text="🔧 Услуги"),
+            KeyboardButton(text="👨‍🔧 О нас")
+        ],
+        [
+            KeyboardButton(text="🧾 Стоимость"),
+            KeyboardButton(text="✅ Проекты")
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=False
+)

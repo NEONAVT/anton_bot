@@ -1,9 +1,19 @@
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+# prices_kb.py
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import WebAppInfo
-prices_kb = InlineKeyboardMarkup(inline_keyboard=[
-    [InlineKeyboardButton(text="📤 Отправить заявку на расчет", web_app=WebAppInfo(url="https://neonavt.github.io/anton_bot/make-order.html"))],
-    [InlineKeyboardButton(text="🔧 Услуги", callback_data="services"),
-     InlineKeyboardButton(text="👨‍🔧 О нас", callback_data="about")],
-    [InlineKeyboardButton(text="🧾 Стоимость", callback_data="prices"),
-     InlineKeyboardButton(text="✅ Проекты", callback_data="projects")]
-])
+
+prices_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [KeyboardButton(text="📤 Отправить заявку на расчет", web_app=WebAppInfo(url="https://neonavt.github.io/anton_bot/make-order.html"))],
+        [
+            KeyboardButton(text="🔧 Услуги"),
+            KeyboardButton(text="👨‍🔧 О нас")
+        ],
+        [
+            KeyboardButton(text="🧾 Стоимость"),
+            KeyboardButton(text="✅ Проекты")
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=False
+)

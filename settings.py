@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 load_dotenv()
@@ -6,7 +8,7 @@ load_dotenv()
 class Settings(BaseSettings):
     bot_token: str
     admin_chat_id: str
-    base_dir: str = os.path.dirname(os.path.dirname(__file__))
+    base_dir: Path = os.path.dirname(os.path.dirname(__file__))
 
     DB_NAME: str
     DB_ENGINE: str
