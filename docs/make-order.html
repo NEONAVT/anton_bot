@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Отправить заявку с файлом</title>
+    <title>Отправить заявку</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -60,7 +60,7 @@
 <body>
 <main id="main">
     <h1 class="mb-3">Отправить заявку</h1>
-    <img src="../make_order.png" alt="make order">
+    <img src="make_order.png" alt="make order">
     <p class="mb-4">Заполните форму, чтобы наш специалист рассмотрел вашу проблему.</p>
     <button id="click" class="btn btn-primary btn-lg">Отправить заявку</button>
 </main>
@@ -75,10 +75,6 @@
     </div>
     <div class="mb-3">
         <textarea class="form-control" placeholder="Проблема" id="user_problem" required></textarea>
-    </div>
-    <div class="mb-3">
-        <input type="file" class="form-control" id="user_file" accept="image/*,video/*">
-        <small class="form-text text-muted">Прикрепите фото или видео вашей проблемы</small>
     </div>
     <div id="error" class="error-message"></div>
     <button id="order" type="button" class="btn btn-success btn-lg">Отправить заявку</button>
@@ -111,7 +107,6 @@
         let name = document.getElementById("user_name").value.trim();
         let phone = document.getElementById("user_phone").value.trim();
         let problem = document.getElementById("user_problem").value.trim();
-        let file = document.getElementById("user_file").files[0];
 
         if (name.length < 2) {
             document.getElementById("error").innerText = 'Введите корректное имя';
@@ -130,10 +125,6 @@
         }
 
         let formData = {name, phone, problem};
-        if (file) {
-            formData.fileName = file.name;
-        }
-
         tg.sendData(JSON.stringify(formData));
         tg.close();
     });

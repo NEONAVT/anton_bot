@@ -3,7 +3,8 @@ import asyncio
 from handlers import (start_router,
                       about_router,
                       prices_router,
-                      callback_web_app_router)
+                      callback_web_app_router,
+                      prices_web_app_router)
 
 
 async def main():
@@ -11,6 +12,7 @@ async def main():
     dp.include_router(about_router)
     dp.include_router(prices_router)
     dp.include_router(callback_web_app_router)
+    dp.include_router(prices_web_app_router)
 
     await dp.start_polling(bot)
 

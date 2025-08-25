@@ -4,7 +4,6 @@ from aiogram.types import CallbackQuery
 from keyboards import prices_kb
 
 router = Router()
-active_requests = {}
 
 
 @router.callback_query(lambda c: c.data == "prices")
