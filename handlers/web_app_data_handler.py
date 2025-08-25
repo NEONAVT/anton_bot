@@ -16,11 +16,14 @@ active_requests = {}
 @router.message(F.web_app_data)
 async def web_app_data_handler(message: types.Message):
     try:
+        logger.info(f"Web app data received from user {message.from_user.id}")
+        logger.debug(f"Raw web app data: {message.web_app_data.data}")
+
         data = json.loads(message.web_app_data.data)
         form_type = data.get("form", "unknown")
 
-        logger.info(f"Web app data received from user {message.from_user.id}: form_type={form_type}")
-        logger.debug(f"Web app data: {data}")
+        logger.info(f"Form type: {form_type}")
+        logger.debug(f"Parsed data: {data}")
 
         if form_type == "callback":
             # Всегда используем get() с дефолтом
@@ -119,14 +122,16 @@ async def handle_files(message: types.Message):
         logger.info(f"File added to request for user {message.from_user.id}: type={file_type}, id={file_id}")
         logger.debug(f"Total files in request: {len(req['files'])}")
 
-        await message.answer("Файл добавлен к заявке.")
-
-        # Автоматическая финализация после добавления файла
-        await finalize_request(message.chat.id, message)
+        await message.answer("Файл добавлен к заявке. Отправьте еще файлы или нажмите /done для завершения.")
 
     except Exception as e:
         logger.error(f"Error handling file from user {message.from_user.id}: {e}", exc_info=True)
         await message.answer("Произошла ошибка при обработке файла. Пожалуйста, попробуйте снова.")
+
+
+@router.message(F.text == "/done")
+async def finalize_request_command(message: types.Message):
+    await finalize_request(message.chat.id, message)
 
 
 async def finalize_request(chat_id: int, message: types.Message):
