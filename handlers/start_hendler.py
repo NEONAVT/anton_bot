@@ -1,10 +1,10 @@
-import json
-
-from aiogram import types, Router, F
+import logging
+from aiogram import types, Router
 from aiogram.filters import CommandStart
 from keyboards import start_kb
-from bot_config import telegram_client
-from settings import settings
+
+# Настройка логирования для этого модуля
+logger = logging.getLogger(__name__)
 
 router = Router()
 
@@ -12,7 +12,17 @@ router = Router()
 @router.message(CommandStart())
 async def start(message: types.Message):
     try:
-        print(message.chat.id)
+        # Логируем информацию о пользователе
+        user_info = f"ID: {message.from_user.id}, "
+        if message.from_user.username:
+            user_info += f"Username: @{message.from_user.username}, "
+        user_info += f"Name: {message.from_user.first_name}"
+        if message.from_user.last_name:
+            user_info += f" {message.from_user.last_name}"
+
+        logger.info(f"Start command received from user: {user_info}")
+        logger.info(f"Chat ID: {message.chat.id}, Chat type: {message.chat.type}")
+
         await message.answer(
             text=(
                 f"👋Добрый день, {message.from_user.first_name}!\n\n"
@@ -24,35 +34,32 @@ async def start(message: types.Message):
                 f"Вы можете быстро узнать о наших услугах или заказать обратный звонок — "
                 f"с вами свяжутся в ближайшее время.\n\n"
                 f"⬇️Для получения информации воспользуйтесь кнопками ниже."
-            )
-            ,
+            ),
             reply_markup=start_kb
         )
+
+        logger.info(f"Start message successfully sent to user {message.from_user.id}")
+
     except Exception as e:
-        # Обработка ошибок через логирование или сервис
-        print(f"Ошибка при отправке сообщения: {e}")
-
-@router.message(F.web_app_data)
-async def callback_web_app_data_handler(message: types.Message):
-    """Handle data sent from the WebApp."""
-    import json
-    result = json.loads(message.web_app_data.data)
-    text_msg = (
-        f"🔔Заказан обратный звонок от {result['name'].capitalize()} \n"
-        f"на номер телефона {result['phone']} в {result['time']} \n"
-        f'с темой звонка "{result['topic'].capitalize()}". \n\n'
-        f"Для связи в чате @{message.from_user.username}"
-    )
-
-    admin_ids = [int(chat_id) for chat_id in settings.admin_chat_id.split(",") if chat_id]
-    for chat_id in admin_ids:
-        await telegram_client.post(
-            method="sendMessage",
-            chat_id=chat_id,
-            text=text_msg
+        # Логируем ошибку с полной информацией
+        logger.error(
+            f"Error sending start message to user {message.from_user.id}: {e}",
+            exc_info=True
         )
-    await message.answer(
-        f"{message.from_user.first_name}, спасибо! \n\n"
-        f"📨Ваша заявка на обратный звонок передана! \n\n"
-        f"С вами свяжутся наши специалисты в удобное для вас время или напишут в личные сообщения в Телеграм."
-    )
+
+        # Дополнительная информация об ошибке
+        error_context = {
+            'user_id': message.from_user.id,
+            'chat_id': message.chat.id,
+            'error_type': type(e).__name__,
+            'error_message': str(e)
+        }
+        logger.debug(f"Error context: {error_context}")
+
+        # Можно также отправить сообщение пользователю об ошибке
+        try:
+            await message.answer(
+                "⚠️ Произошла ошибка при обработке запроса. Попробуйте позже."
+            )
+        except Exception as inner_e:
+            logger.error(f"Failed to send error message to user: {inner_e}")

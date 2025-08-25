@@ -1,122 +1,150 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Заказать обратный звонок</title>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-body {
-    font-family: 'Montserrat', sans-serif;
-    background: var(--tg-theme-bg-color, #f8f9fa);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-}
-main, #form {
-    width: 100%;
-    max-width: 400px;
-    background: var(--tg-theme-bg-color, #fff);
-    border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-img {
-    max-width: 100%;
-    height: auto;
-    margin: 20px auto;
-    border-radius: 12px;
-    object-fit: cover;
-}
-button { width: 100%; }
-#error {
-    color: #ff0000;
-    font-size: 0.85rem;
-    margin-bottom: 10px;
-    min-height: 18px;
-}
-#form { display: none; }
-#user_topic { height: 100px; resize: vertical; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Заказать обратный звонок</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--tg-theme-bg-color, #f8f9fa);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        main, #form {
+            width: 100%;
+            max-width: 400px;
+            background: var(--tg-theme-bg-color, #fff);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        #error {
+            color: #ff0000;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            min-height: 18px;
+        }
+
+        #form {
+            display: none;
+        }
+
+        #user_topic {
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
 </head>
 <body>
 <main id="main">
-<h1 class="mb-3">Заказать обратный звонок</h1>
-<img src="request_callback_img.png" alt="callback image">
-<p class="mb-4">Заполните форму, чтобы наш специалист связался с вами в удобное время.</p>
-<button id="click" class="btn btn-primary btn-lg">Заказать звонок</button>
+    <h1 class="mb-3">Заказать обратный звонок</h1>
+    <img src="request_callback_img.png" alt="callback image">
+    <p class="mb-4">Заполните форму, чтобы наш специалист связался с вами в удобное время.</p>
+    <button id="click" class="btn btn-primary btn-lg">Заказать звонок</button>
 </main>
 
 <form id="form" class="needs-validation" novalidate>
-<input type="hidden" id="form_type" value="callback">
-<div class="mb-3">
-    <input type="text" class="form-control" placeholder="Имя" id="user_name" required>
-</div>
-<div class="mb-3">
-    <input type="tel" class="form-control" placeholder="Номер телефона (+79998887766)" id="user_phone" maxlength="12" required>
-</div>
-<div class="mb-3">
-    <textarea class="form-control" placeholder="Тема обращения" id="user_topic" required></textarea>
-</div>
-<div class="mb-3">
-    <input type="text" class="form-control" placeholder="Удобное время звонка (00:00)" id="user_time" maxlength="5" required>
-</div>
-<div id="error" class="error-message"></div>
-<button id="order" type="button" class="btn btn-success btn-lg">Заказать звонок</button>
+    <input type="hidden" id="form_type" value="callback">
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Имя" id="user_name" required>
+    </div>
+    <div class="mb-3">
+        <input type="tel" class="form-control" placeholder="Номер телефона (+79998887766)" id="user_phone"
+               maxlength="12" required>
+    </div>
+    <div class="mb-3">
+        <textarea class="form-control" placeholder="Тема обращения" id="user_topic" required></textarea>
+    </div>
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Удобное время звонка (00:00)" id="user_time" maxlength="5"
+               required>
+    </div>
+    <div id="error" class="error-message"></div>
+    <button id="order" type="button" class="btn btn-success btn-lg">Заказать звонок</button>
 </form>
 
 <script src="https://telegram.org/js/telegram-web-app.js?59"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-let tg = window.Telegram.WebApp;
-tg.expand();
+    let tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
 
-document.getElementById("click").addEventListener("click", () => {
-    document.getElementById("main").style.display = "none";
-    document.getElementById("form").style.display = "block";
-});
+    document.getElementById("click").addEventListener("click", () => {
+        document.getElementById("main").style.display = "none";
+        document.getElementById("form").style.display = "block";
+    });
 
-let phoneInput = document.getElementById("user_phone");
-phoneInput.addEventListener("input", () => {
-    let val = phoneInput.value;
-    if (!val.startsWith("+7")) val = "+7";
-    val = "+7" + val.slice(2).replace(/\D/g,'');
-    if (val.length > 12) val = val.slice(0,12);
-    phoneInput.value = val;
-});
+    let phoneInput = document.getElementById("user_phone");
+    phoneInput.addEventListener("input", () => {
+        let val = phoneInput.value;
+        if (!val.startsWith("+7")) val = "+7";
+        val = "+7" + val.slice(2).replace(/\D/g, '');
+        if (val.length > 12) val = val.slice(0, 12);
+        phoneInput.value = val;
+    });
 
-let timeInput = document.getElementById("user_time");
-timeInput.addEventListener("input", () => {
-    let value = timeInput.value.replace(/\D/g, "");
-    if (value.length > 4) value = value.slice(0,4);
-    if (value.length >= 3) value = value.slice(0,2) + ":" + value.slice(2);
-    else if (value.length >= 2) value = value.slice(0,2) + ":";
-    timeInput.value = value;
-});
+    let timeInput = document.getElementById("user_time");
+    timeInput.addEventListener("input", () => {
+        let value = timeInput.value.replace(/\D/g, "");
+        if (value.length > 4) value = value.slice(0, 4);
+        if (value.length >= 3) value = value.slice(0, 2) + ":" + value.slice(2);
+        else if (value.length >= 2) value = value.slice(0, 2) + ":";
+        timeInput.value = value;
+    });
 
-document.getElementById("order").addEventListener("click", () => {
-    document.getElementById("error").innerText = '';
+    document.getElementById("order").addEventListener("click", () => {
+        document.getElementById("error").innerText = '';
 
-    let name = document.getElementById("user_name").value.trim();
-    let phone = document.getElementById("user_phone").value.trim();
-    let topic = document.getElementById("user_topic").value.trim();
-    let time = document.getElementById("user_time").value.trim();
-    let form_type = document.getElementById("form_type").value;
+        let name = document.getElementById("user_name").value.trim();
+        let phone = document.getElementById("user_phone").value.trim();
+        let topic = document.getElementById("user_topic").value.trim();
+        let time = document.getElementById("user_time").value.trim();
+        let form_type = document.getElementById("form_type").value;
 
-    if (name.length < 2) { document.getElementById("error").innerText = 'Введите корректное имя'; return; }
-    let phonePattern = /^\+7\d{10}$/;
-    if (!phonePattern.test(phone)) { document.getElementById("error").innerText = 'Введите корректный номер телефона в формате +79998887766'; return; }
-    if (topic.length < 2) { document.getElementById("error").innerText = 'Укажите тему обращения'; return; }
-    let timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
-    if (!timePattern.test(time)) { document.getElementById("error").innerText = 'Введите время в формате 00:00 (только числа)'; return; }
+        if (name.length < 2) {
+            document.getElementById("error").innerText = 'Введите корректное имя';
+            return;
+        }
+        let phonePattern = /^\+7\d{10}$/;
+        if (!phonePattern.test(phone)) {
+            document.getElementById("error").innerText = 'Введите корректный номер телефона в формате +79998887766';
+            return;
+        }
+        if (topic.length < 2) {
+            document.getElementById("error").innerText = 'Укажите тему обращения';
+            return;
+        }
+        let timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
+        if (!timePattern.test(time)) {
+            document.getElementById("error").innerText = 'Введите время в формате 00:00 (только числа)';
+            return;
+        }
 
-    tg.sendData(JSON.stringify({form: form_type, name, phone, topic, time}));
-    tg.close();
-});
+        tg.sendData(JSON.stringify({form: form_type, name, phone, topic, time}));
+        tg.close();
+    });
 </script>
 </body>
 </html>
