@@ -3,10 +3,11 @@ import logging
 from bot_config import bot, dp
 import asyncio
 from handlers import (start_router,
-                      about_router,
+                      services_router,
                       prices_router,
                       web_app_data_router,
-                      projecs_router
+                      projecs_router,
+                      about_router
                       )
 
 # Настройка логирования
@@ -19,10 +20,11 @@ logger = logging.getLogger(__name__)
 
 async def main():
     dp.include_router(start_router)
-    dp.include_router(about_router)
+    dp.include_router(services_router)
     dp.include_router(prices_router)
     dp.include_router(web_app_data_router)
     dp.include_router(projecs_router)
+    dp.include_router(about_router)
 
     await dp.start_polling(bot)
 
