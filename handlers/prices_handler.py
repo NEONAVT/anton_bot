@@ -1,9 +1,10 @@
 from aiogram import types, Router
 from aiogram.enums import ParseMode
 from aiogram.types import CallbackQuery
-from keyboards import services_kb
+from keyboards import prices_kb
 
 router = Router()
+active_requests = {}
 
 
 @router.callback_query(lambda c: c.data == "prices")

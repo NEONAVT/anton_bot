@@ -33,7 +33,7 @@ async def start(message: types.Message):
         print(f"Ошибка при отправке сообщения: {e}")
 
 @router.message(F.web_app_data)
-async def web_app_data_handler(message: types.Message):
+async def callback_web_app_data_handler(message: types.Message):
     """Handle data sent from the WebApp."""
     import json
     result = json.loads(message.web_app_data.data)
