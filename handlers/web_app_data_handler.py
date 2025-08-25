@@ -76,7 +76,8 @@ async def web_app_data_handler(message: types.Message):
                 f"Имя: {name}\n"
                 f"Телефон: {phone}\n"
                 f"Описание проблемы: {problem}\n\n"
-                "*📷 Пришлите одно фото или одно видео вашей проблемы одним или несколькими сообщениями.*",
+                "*📷 Пришлите одно фото или одно видео вашей проблемы.*\n\n"
+                "*Или можете записать 🎙️голосовое или 📹видео-сообщение для описания вашей проблемы *",
                 parse_mode=ParseMode.MARKDOWN,
             )
             logger.info(f"Problem request instructions sent to user {message.from_user.id}")
@@ -94,7 +95,7 @@ async def web_app_data_handler(message: types.Message):
 
 
 # Приём файлов
-@router.message(F.photo | F.video | F.document)
+@router.message(F.photo | F.video | F.document | F.voice | F.video_note)
 async def handle_files(message: types.Message):
     try:
         if message.chat.id not in active_requests:
@@ -118,20 +119,24 @@ async def handle_files(message: types.Message):
             file_type = "document"
             file_id = message.document.file_id
             req["files"].append(("document", file_id))
+        elif message.voice:
+            file_type = "voice"
+            file_id = message.voice.file_id
+            req["files"].append(("voice", file_id))
+        elif message.video_note:
+            file_type = "video_note"
+            file_id = message.video_note.file_id
+            req["files"].append(("video_note", file_id))
 
         logger.info(f"File added to request for user {message.from_user.id}: type={file_type}, id={file_id}")
         logger.debug(f"Total files in request: {len(req['files'])}")
 
-        await message.answer("Файл добавлен к заявке. Отправьте еще файлы или нажмите /done для завершения.")
+        await finalize_request(message.chat.id, message)
 
     except Exception as e:
         logger.error(f"Error handling file from user {message.from_user.id}: {e}", exc_info=True)
         await message.answer("Произошла ошибка при обработке файла. Пожалуйста, попробуйте снова.")
 
-
-@router.message(F.text == "/done")
-async def finalize_request_command(message: types.Message):
-    await finalize_request(message.chat.id, message)
 
 
 async def finalize_request(chat_id: int, message: types.Message):
@@ -167,6 +172,10 @@ async def finalize_request(chat_id: int, message: types.Message):
                             await telegram_client.post(method="sendVideo", chat_id=admin_id, video=fid)
                         elif ftype == "document":
                             await telegram_client.post(method="sendDocument", chat_id=admin_id, document=fid)
+                        elif ftype == "voice":
+                            await telegram_client.post(method="sendVoice", chat_id=admin_id, voice=fid)
+                        elif ftype == "video_note":
+                            await telegram_client.post(method="sendVideoNote", chat_id=admin_id, video_note=fid)
                         logger.info(f"File sent to admin {admin_id}: type={ftype}")
                     except Exception as file_e:
                         logger.error(f"Failed to send file to admin {admin_id}: {file_e}")

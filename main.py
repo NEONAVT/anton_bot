@@ -6,6 +6,7 @@ from handlers import (start_router,
                       about_router,
                       prices_router,
                       web_app_data_router,
+                      projecs_router
                       )
 
 # Настройка логирования
@@ -21,6 +22,7 @@ async def main():
     dp.include_router(about_router)
     dp.include_router(prices_router)
     dp.include_router(web_app_data_router)
+    dp.include_router(projecs_router)
 
     await dp.start_polling(bot)
 
