@@ -42,6 +42,12 @@ button {
     min-height: 18px;
 }
 #form { display: none; }
+
+/* Увеличиваем поле "Тема обращения" как textarea */
+#user_topic {
+    height: 100px;
+    resize: vertical;
+}
 </style>
 </head>
 <body>
@@ -60,7 +66,7 @@ button {
     <input type="tel" class="form-control" placeholder="Номер телефона (+79998887766)" id="user_phone" maxlength="12" required>
 </div>
 <div class="mb-3">
-    <input type="text" class="form-control" placeholder="Тема обращения" id="user_topic" required>
+    <textarea class="form-control" placeholder="Тема обращения" id="user_topic" required></textarea>
 </div>
 <div class="mb-3">
     <input type="text" class="form-control" placeholder="Удобное время звонка (00:00)" id="user_time" maxlength="5" required>
@@ -83,11 +89,10 @@ document.getElementById("click").addEventListener("click", () => {
 // Ограничение ввода в поле телефона
 let phoneInput = document.getElementById("user_phone");
 phoneInput.addEventListener("input", () => {
-    // Оставляем только цифры после +7
     let val = phoneInput.value;
     if (!val.startsWith("+7")) val = "+7";
     val = "+7" + val.slice(2).replace(/\D/g,'');
-    if (val.length > 12) val = val.slice(0,12); // ограничение до 11 цифр после +7
+    if (val.length > 12) val = val.slice(0,12);
     phoneInput.value = val;
 });
 

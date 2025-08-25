@@ -23,7 +23,7 @@ class TelegramRawClient:
         return result_url
 
     async def post(self, method: str, **payload):
-        url = self.prepare_url(method)
+        url = await self.prepare_url(method)
         session = await self.ensure_session()
         try:
             async with session.post(url, json=payload) as resp:

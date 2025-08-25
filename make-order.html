@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Отправить заявку с файлом</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--tg-theme-bg-color, #f8f9fa);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        main, #form {
+            width: 100%;
+            max-width: 400px;
+            background: var(--tg-theme-bg-color, #fff);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        #error {
+            color: #ff0000;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            min-height: 18px;
+        }
+
+        #form {
+            display: none;
+        }
+
+        /* Увеличиваем высоту поля для описания проблемы */
+        #user_problem {
+            height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+<main id="main">
+    <h1 class="mb-3">Отправить заявку</h1>
+    <img src="make_order.png" alt="make order">
+    <p class="mb-4">Заполните форму, чтобы наш специалист рассмотрел вашу проблему.</p>
+    <button id="click" class="btn btn-primary btn-lg">Отправить заявку</button>
+</main>
+
+<form id="form" class="needs-validation" novalidate>
+    <div class="mb-3">
+        <input type="text" class="form-control" placeholder="Имя" id="user_name" required>
+    </div>
+    <div class="mb-3">
+        <input type="tel" class="form-control" placeholder="Номер телефона (+79998887766)" id="user_phone"
+               maxlength="12" required>
+    </div>
+    <div class="mb-3">
+        <textarea class="form-control" placeholder="Проблема" id="user_problem" required></textarea>
+    </div>
+    <div class="mb-3">
+        <input type="file" class="form-control" id="user_file" accept="image/*,video/*">
+        <small class="form-text text-muted">Прикрепите фото или видео вашей проблемы</small>
+    </div>
+    <div id="error" class="error-message"></div>
+    <button id="order" type="button" class="btn btn-success btn-lg">Отправить заявку</button>
+</form>
+
+<script src="https://telegram.org/js/telegram-web-app.js?59"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let tg = window.Telegram.WebApp;
+    tg.expand();
+
+    document.getElementById("click").addEventListener("click", () => {
+        document.getElementById("main").style.display = "none";
+        document.getElementById("form").style.display = "block";
+    });
+
+    // Ограничение ввода в поле телефона
+    let phoneInput = document.getElementById("user_phone");
+    phoneInput.addEventListener("input", () => {
+        let val = phoneInput.value;
+        if (!val.startsWith("+7")) val = "+7";
+        val = "+7" + val.slice(2).replace(/\D/g, '');
+        if (val.length > 12) val = val.slice(0, 12);
+        phoneInput.value = val;
+    });
+
+    document.getElementById("order").addEventListener("click", () => {
+        document.getElementById("error").innerText = '';
+
+        let name = document.getElementById("user_name").value.trim();
+        let phone = document.getElementById("user_phone").value.trim();
+        let problem = document.getElementById("user_problem").value.trim();
+        let file = document.getElementById("user_file").files[0];
+
+        if (name.length < 2) {
+            document.getElementById("error").innerText = 'Введите корректное имя';
+            return;
+        }
+
+        let phonePattern = /^\+7\d{10}$/;
+        if (!phonePattern.test(phone)) {
+            document.getElementById("error").innerText = 'Введите корректный номер телефона в формате +79998887766';
+            return;
+        }
+
+        if (problem.length < 2) {
+            document.getElementById("error").innerText = 'Опишите проблему';
+            return;
+        }
+
+        let formData = {name, phone, problem};
+        if (file) {
+            formData.fileName = file.name;
+        }
+
+        tg.sendData(JSON.stringify(formData));
+        tg.close();
+    });
+</script>
+</body>
+</html>
