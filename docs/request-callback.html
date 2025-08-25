@@ -32,9 +32,7 @@ img {
     border-radius: 12px;
     object-fit: cover;
 }
-button {
-    width: 100%;
-}
+button { width: 100%; }
 #error {
     color: #ff0000;
     font-size: 0.85rem;
@@ -42,12 +40,7 @@ button {
     min-height: 18px;
 }
 #form { display: none; }
-
-/* Увеличиваем поле "Тема обращения" как textarea */
-#user_topic {
-    height: 100px;
-    resize: vertical;
-}
+#user_topic { height: 100px; resize: vertical; }
 </style>
 </head>
 <body>
@@ -59,6 +52,7 @@ button {
 </main>
 
 <form id="form" class="needs-validation" novalidate>
+<input type="hidden" id="form_type" value="callback">
 <div class="mb-3">
     <input type="text" class="form-control" placeholder="Имя" id="user_name" required>
 </div>
@@ -86,7 +80,6 @@ document.getElementById("click").addEventListener("click", () => {
     document.getElementById("form").style.display = "block";
 });
 
-// Ограничение ввода в поле телефона
 let phoneInput = document.getElementById("user_phone");
 phoneInput.addEventListener("input", () => {
     let val = phoneInput.value;
@@ -96,7 +89,6 @@ phoneInput.addEventListener("input", () => {
     phoneInput.value = val;
 });
 
-// Автоформат времени
 let timeInput = document.getElementById("user_time");
 timeInput.addEventListener("input", () => {
     let value = timeInput.value.replace(/\D/g, "");
@@ -113,18 +105,16 @@ document.getElementById("order").addEventListener("click", () => {
     let phone = document.getElementById("user_phone").value.trim();
     let topic = document.getElementById("user_topic").value.trim();
     let time = document.getElementById("user_time").value.trim();
+    let form_type = document.getElementById("form_type").value;
 
     if (name.length < 2) { document.getElementById("error").innerText = 'Введите корректное имя'; return; }
-
     let phonePattern = /^\+7\d{10}$/;
     if (!phonePattern.test(phone)) { document.getElementById("error").innerText = 'Введите корректный номер телефона в формате +79998887766'; return; }
-
     if (topic.length < 2) { document.getElementById("error").innerText = 'Укажите тему обращения'; return; }
-
     let timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
     if (!timePattern.test(time)) { document.getElementById("error").innerText = 'Введите время в формате 00:00 (только числа)'; return; }
 
-    tg.sendData(JSON.stringify({name, phone, topic, time}));
+    tg.sendData(JSON.stringify({form: form_type, name, phone, topic, time}));
     tg.close();
 });
 </script>

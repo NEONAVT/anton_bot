@@ -50,7 +50,6 @@
             display: none;
         }
 
-        /* Увеличиваем высоту поля для описания проблемы */
         #user_problem {
             height: 100px;
             resize: vertical;
@@ -66,6 +65,7 @@
 </main>
 
 <form id="form" class="needs-validation" novalidate>
+    <input type="hidden" id="form_type" value="problem">
     <div class="mb-3">
         <input type="text" class="form-control" placeholder="Имя" id="user_name" required>
     </div>
@@ -91,7 +91,6 @@
         document.getElementById("form").style.display = "block";
     });
 
-    // Ограничение ввода в поле телефона
     let phoneInput = document.getElementById("user_phone");
     phoneInput.addEventListener("input", () => {
         let val = phoneInput.value;
@@ -107,6 +106,7 @@
         let name = document.getElementById("user_name").value.trim();
         let phone = document.getElementById("user_phone").value.trim();
         let problem = document.getElementById("user_problem").value.trim();
+        let form_type = document.getElementById("form_type").value;
 
         if (name.length < 2) {
             document.getElementById("error").innerText = 'Введите корректное имя';
@@ -124,7 +124,13 @@
             return;
         }
 
-        let formData = {name, phone, problem};
+        let formData = {
+            form: form_type,
+            name: name,
+            phone: phone,
+            topic: problem
+        };
+
         tg.sendData(JSON.stringify(formData));
         tg.close();
     });
