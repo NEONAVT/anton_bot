@@ -10,6 +10,7 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background: var(--tg-theme-bg-color, #f8f9fa);
+            color: var(--tg-theme-text-color, #000);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -21,10 +22,19 @@
             width: 100%;
             max-width: 400px;
             background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
             border-radius: 16px;
             padding: 30px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
+        }
+
+        p {
+            color: var(--tg-theme-hint-color, #6c757d);
+        }
+
+        h1 {
+            color: var(--tg-theme-text-color, #000);
         }
 
         img {
@@ -35,12 +45,17 @@
             object-fit: cover;
         }
 
-        button {
+        button,
+        .btn-primary,
+        .btn-success {
             width: 100%;
+            background-color: var(--tg-theme-button-color, #0d6efd) !important;
+            color: var(--tg-theme-button-text-color, #fff) !important;
+            border: none !important;
         }
 
         #error {
-            color: #ff0000;
+            color: #ff3333;
             font-size: 0.85rem;
             margin-bottom: 10px;
             min-height: 18px;
@@ -53,7 +68,17 @@
         #user_problem {
             height: 100px;
             resize: vertical;
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+            border: 1px solid var(--tg-theme-hint-color, #ccc);
         }
+
+        input, textarea {
+            background: var(--tg-theme-bg-color, #fff);
+            color: var(--tg-theme-text-color, #000);
+            border: 1px solid var(--tg-theme-hint-color, #ccc);
+        }
+
     </style>
 </head>
 <body>
